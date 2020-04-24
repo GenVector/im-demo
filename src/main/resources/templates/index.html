@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>im</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
+    <link href="https://www.layuicdn.com/layui/css/layui.css" rel="stylesheet">
+    <link href="/css/index.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.15/lodash.core.js"></script>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+</head>
+<body>
+<div class="im-container">
+    <div class="mask"></div>
+    <div class="session-list-container"></div>
+    <div class="session-container">
+        <div class="top">
+            <div class="curr-seesion-name"></div>
+            <div class="user-info">
+                <img class="current-user-avatar" src="images/avatar.jpg" style="width: 24px;height: 24px;"/>
+                <div class="current-user">未登录</div>
+            </div>
+        </div>
+        <div style="display: flex;flex-direction: row;justify-content: stretch;height: 536px;overflow: auto;">
+            <div class="center">
+                <div class="information"></div>
+                <div class="operation" style="position: relative;">
+                    <div class="emoji-container">
+                        <span class="emoji" title="笑嘻嘻">😀</span>
+                        <span class="emoji" title="笑嘻嘻的脸，含笑的眼睛">😁</span>
+                        <span class="emoji" title="脸上带着喜悦的泪水">😂</span>
+                        <span class="emoji" title="开口笑脸">😃</span>
+                        <span class="emoji" title="开口笑脸和微笑的眼睛">😄</span>
+                        <span class="emoji" title="笑脸淌冷汗">😅</span>
+                        <span class="emoji" title="开口笑紧闭的眼睛">😆</span>
+                        <span class="emoji" title="眨眼表情">😉</span>
+                        <span class="emoji" title="面带微笑的眼睛">😊</span>
+                        <span class="emoji" title="品尝美味食物表情">😋</span>
+                        <span class="emoji" title="太阳镜笑脸">😎</span>
+                        <span class="emoji" title="面带心形眼睛">😍</span>
+                        <span class="emoji" title="飞吻表情">😘</span>
+                        <span class="emoji" title="亲吻表情">😗</span>
+                        <span class="emoji" title="含笑亲吻表情">😙</span>
+                        <span class="emoji" title="闭眼亲吻表情">😚</span>
+                        <span class="emoji" title="光环笑脸">😇</span>
+                        <span class="emoji" title="中性面">😐</span>
+                        <span class="emoji" title="面无表情">😑</span>
+                        <span class="emoji" title="没有嘴的脸">😶</span>
+                        <span class="emoji" title="傻笑">😏</span>
+                        <span class="emoji" title="坚持">😣</span>
+                        <span class="emoji" title="失望得到宽慰的脸">😥</span>
+                        <span class="emoji" title="张着嘴">😮</span>
+                        <span class="emoji" title="安静的脸">😯</span>
+                        <span class="emoji" title="困">😪</span>
+                        <span class="emoji" title="疲惫">😫</span>
+                        <span class="emoji" title="熟睡">😴</span>
+                        <span class="emoji" title="安心">😌</span>
+                        <span class="emoji" title="吐舌头">😛</span>
+                        <span class="emoji" title="吐舌头，眨眼眼">😜</span>
+                        <span class="emoji" title="闭眼吐舌头">😝</span>
+                        <span class="emoji" title="垂头丧气">😒</span>
+                        <span class="emoji" title="冷汗">😓</span>
+                        <span class="emoji" title="沉思">😔</span>
+                        <span class="emoji" title="困惑">😕</span>
+                        <span class="emoji" title="惊讶">😲</span>
+                        <span class="emoji" title="戴口罩">😷</span>
+                        <span class="emoji" title="被打败">😖</span>
+                        <span class="emoji" title="失望">😞</span>
+                        <span class="emoji" title="忧伤">😟</span>
+                        <span class="emoji" title="面带胜利">😤</span>
+                        <span class="emoji" title="哭泣的脸">😢</span>
+                        <span class="emoji" title="大声哭泣的脸">😭</span>
+                        <span class="emoji" title="张嘴哭">😦</span>
+                        <span class="emoji" title="痛苦">😧</span>
+                        <span class="emoji" title="恐惧">😨</span>
+                        <span class="emoji" title="狰狞">😬</span>
+                        <span class="emoji" title="淌冷汗">😰</span>
+                        <span class="emoji" title="尖叫恐惧">😱</span>
+                        <span class="emoji" title="红扑扑的脸蛋">😳</span>
+                        <span class="emoji" title="晕">😵</span>
+                        <span class="emoji" title="噘嘴">😡</span>
+                        <span class="emoji" title="愤怒">😠</span>
+                        <span class="emoji" title="长角的笑脸">😈</span>
+                        <span class="emoji" title="恶魔">👿</span>
+                        <span class="emoji" title="日本食人魔">👹</span>
+                        <span class="emoji" title="日本哥布林">👺</span>
+                        <span class="emoji" title="头骨">💀</span>
+                        <span class="emoji" title="骷髅头">☠</span>
+                        <span class="emoji" title="鬼">👻</span>
+                        <span class="emoji" title="外星异形">👽</span>
+                    </div>
+                    <div class="tools">
+                        <i class="layui-icon layui-icon-face-smile-b" title="表情" onclick="showEmoji()"></i>
+                        <i class="layui-icon layui-icon-picture" title="图片" onclick="uploadImg()"></i>
+                        <i class="layui-icon layui-icon-file" title="文件" onclick="uploadFile()"></i>
+                        <form id="imgForm" style="display: none;">
+                            <input id="imgFile" type="file" accept="image/jpeg, image/gif, image/png">
+                        </form>
+                        <form id="fileForm" style="display: none;">
+                            <input id="file" type="file" accept="*">
+                        </form>
+                    </div>
+                    <textarea class="typing"></textarea>
+                    <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" onclick="sendMsg()"
+                            style="position: absolute;right: 12px;bottom: 12px;">发送
+                    </button>
+                </div>
+            </div>
+            <div class="right">
+                <div class="group-users">
+                    <div style="padding: 6px;">
+                        <span>成员(</span><span id="current-total">0</span>/<span id="history-total">0</span>)
+                    </div>
+                    <div class="group-users-list"></div>
+                </div>
+                <div class="friend-user-container">
+                    <img class="friend-user-avatar" src="images/avatar.jpg"/>
+                    <div class="friend-user"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    const chatContext = {
+        curUser: {id: '', name: '', avatar: ''},
+        curSession: {id: '', name: '', avatar: '', type: '', chatLog: ''},
+        contacts: {},
+        sessions: [],
+        socket: null,
+        ui: {
+            info: msg => {
+                $('.information').append(`<div style="text-align:center;color:#aca;margin:24px auto;">${msg}</div>`).scrollTop($('.information')[0].scrollHeight);
+            },
+            self: msg => {
+                const h = `
+                    <div class="info info-self">
+                        <div class="content content-self">
+                            <div class="name">${moment(msg.sendTime).format('MM-DD HH:mm:ss')} ${msg.fromName}</div>
+                            <div class="text text-self">${dealContent(msg.content)}</div>
+                        </div>
+                        <img class="avatar" src="images/${chatContext.curUser.avatar}">
+                    </div>
+                `;
+                $('.information').append(h).scrollTop($('.information')[0].scrollHeight);
+            },
+            other: msg => {
+                const other = getOther(msg.fromId);
+                const h = `
+                    <div class="info info-other">
+                        <img class="avatar" src="images/${other.avatar}">
+                        <div class="content content-other">
+                            <div class="name">${other.name} ${moment(msg.sendTime).format('MM-DD HH:mm:ss')}</div>
+                            <div class="text">${dealContent(msg.content)}</div>
+                        </div>
+                    </div>
+                `;
+                $('.information').append(h).scrollTop($('.information')[0].scrollHeight);
+            }
+        }
+    };
+
+    // 获取聊天消息对象
+    const getOther = otherId => {
+        if (chatContext.curSession.type === 'group' || chatContext.curSession.type === 'public') {
+            return _.find(chatContext.curSession.users, {'id': otherId});
+        } else {
+            return chatContext.curSession;
+        }
+    };
+
+    const sendMsg = () => {
+        const text = $('.typing').val();
+        if (text !== '') {
+            const msg = {
+                fromId: chatContext.curUser.id,
+                fromName: chatContext.curUser.name,
+                fromAvatar: chatContext.curUser.avatar,
+                toId: chatContext.curSession.id,
+                toName: chatContext.curSession.name,
+                toAvatar: chatContext.curSession.avatar,
+                type: chatContext.curSession.type === 'user' ? 'TYPE_ONE' : 'TYPE_GROUP',
+                msgType: 'text',
+                content: text,
+                time: null
+            };
+            chatContext.socket.send(JSON.stringify(msg));
+            $('.typing').val('');
+        }
+    };
+
+    const joinGroup = group => {
+        $.post('/im/joinGroup', {groupId: group.id, userId: chatContext.curUser.id}, res => {
+            if (res.code === 200) {
+                console.log(`${chatContext.curUser.name} 加入 ${group.name}!`);
+                const msg = {
+                    fromId: chatContext.curUser.id,
+                    fromName: chatContext.curUser.name,
+                    toId: group.id,
+                    toName: group.name,
+                    type: 'TYPE_SYSTEM',
+                    msgType: 'MSG_TYPE_JOIN',
+                    content: ''
+                };
+                chatContext.socket.send(JSON.stringify(msg));
+
+                getContacts();
+            }
+        });
+    };
+
+    const getContacts = () => {
+        $.get(`/im/getContacts/${chatContext.curUser.id}`, res => {
+            if (res.code === 200) {
+                chatContext.contacts = res.data;
+                chatContext.contacts.groups.forEach(v => generateSesssionItem(v, v.type));
+                chatContext.contacts.friends.forEach(v => generateSesssionItem(v, 'user'));
+                $(`#${chatContext.contacts.groups[0].id}`).trigger('click');
+            }
+        });
+    };
+
+    const getPublicGroup = () => {
+        $.get('/im/getPublicGroup', res => {
+            if (res.code === 200) {
+                joinGroup(res.data[0]);
+            }
+        });
+    };
+
+    const getGroups = () => {
+        $.get(`/im/getGroups/${chatContext.curUser.id}`, res => {
+            if (res.code === 200) {
+                chatContext.groups = res.data;
+                chatContext.groups.forEach(v => generateSesssionItem(v, 'group'));
+                // getGroupUsers(chatContext.groups[0]);
+                $(`#${chatContext.groups[0].id}`).trigger('click');
+            }
+        });
+    };
+
+    const generateSesssionItem = (item, type) => {
+        const h = `
+            <div id="${item.id}" class="session-item ${type == 'user' ? item.status == 1 ? '' : 'gray' : ''}" onclick="chat('${item.id}')">
+                <div class="session-avatar">
+                    <img src="images/${item.avatar}">
+                </div>
+                <div style="margin-left: 10px;">${item.name}</div>
+            </div>
+        `;
+        $('.session-list-container').append(h);
+        item.type = type;
+        item.chatLog = '';
+        chatContext.sessions.push(item);
+    };
+
+    const chat = id => {
+        if (chatContext.curSession.id !== '') {
+            chatContext.curSession.chatLog = $('.information').html();
+        }
+        chatContext.curSession = _.find(chatContext.sessions, {'id': id});
+        $('.information').html(chatContext.curSession.chatLog);
+        $('.information').scrollTop($('.information')[0].scrollHeight);
+
+        if (chatContext.curSession.type === 'group' || chatContext.curSession.type === 'public') {
+            chat2Group();
+        } else {
+            chat2User();
+        }
+        $('.curr-seesion-name').html(chatContext.curSession.name);
+        $('.session-item').removeClass('session-item-active ');
+        $(`#${id}`).addClass('session-item-active ');
+    };
+
+    const chat2Group = () => {
+        $('.friend-user-container').css('display', 'none');
+        $('.group-users').show();
+        getGroupUsers(chatContext.curSession.id);
+    };
+
+    const chat2User = () => {
+        $('.group-users').hide();
+        $('.friend-user-container').css('display', 'flex');
+        $('.friend-user-avatar').attr('src', `images/${chatContext.curSession.avatar}`);
+        $('.friend-user').html(chatContext.curSession.name);
+    };
+
+    const getGroupUsers = groupId => {
+        $.get(`/im/getGroupUsers/${groupId}`, res => {
+            $('.group-users-list').html('');
+            $('#current-total').html(_.filter(res.data, {'status': 1}).length);
+            $('#history-total').html(res.data.length);
+            chatContext.curSession['users'] = res.data;
+            if (chatContext.curSession.users.length > 0) {
+                chatContext.curSession.users.forEach(v => {
+                    if (v.name.length > 7) {
+                        v.name = v.name.slice(0, 7) + '...'
+                    }
+                    const h = `
+                        <div class="online-user ${v.status === 0 ? 'gray' : ''}" onclick="clickGroupUser('${v.id}')">
+                            <img class="avatar" src="images/${v.avatar}">
+                            <span class="nickname">${v.name}</span>
+                        </div>
+                    `;
+                    $('.group-users-list').append(h);
+
+                });
+            }
+        });
+    };
+
+    const clickGroupUser = userId => {
+        const session = _.find(chatContext.sessions, {'id': userId});
+        if (!session) {
+            const user = _.find(chatContext.curSession.users, {'id': userId});
+            generateSesssionItem(user, 'user');
+        }
+        $(`#${userId}`).trigger('click');
+    }
+
+    const showEmoji = () => $('.mask,.emoji-container').show();
+
+    const uploadImg = () => $('#imgFile').trigger('click');
+
+    const uploadFile = () => $('#file').trigger('click');
+
+    const dealContent = msg => {
+        if (/^(\[FILE\]:)+[A-Za-z0-9]+:[A-Za-z0-9]+.+[A-Za-z0-9]:[0-9]/.test(msg)) {
+            const str = msg.split(":");
+            return `<a target="_blank" href="im/download/${str[1]}" style="text-decoration: underline;color: white;">${str[2]} - ${(str[3] / 1024 / 1024).toFixed(2)}MB</a>`;
+        } else if (/^(\[IMG\]:)+[A-Za-z0-9]/.test(msg)) {
+            const str = msg.split(":");
+            return `<img src="im/download/${str[1]}" style="max-width: 80%;cursor: pointer;" onclick="window.open('im/download/${str[1]}')">`;
+        } else {
+            return msg;
+        }
+    };
+
+    const init = () => {
+        $('.mask').on('click', e => {
+            $('.mask,.emoji-container').hide();
+        });
+
+        $('.emoji-container span').on('click', function (e) {
+            $('.mask,.emoji-container').hide();
+            let val = $('.typing').val();
+            val += $(this).html();
+            $('.typing').val(val).focus();
+        });
+
+        $('#imgFile').on('change', e => {
+            const formData = new FormData();
+            formData.append("file", $('#imgFile')[0].files[0]);
+            $.ajax({
+                url: '/im/upload',
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                data: formData,
+                processData: false, // 使数据不做处理
+                contentType: false, // 不要设置Content-Type请求头
+                success: r => {
+                    if (r.code === 200) {
+                        $('.typing').val(`[IMG]:${r.data.id}`);
+                        sendMsg();
+                    }
+                }
+            });
+        });
+
+        $('#file').on('change', e => {
+            const formData = new FormData();
+            formData.append("file", $('#file')[0].files[0]);
+            $.ajax({
+                url: '/im/upload',
+                dataType: 'json',
+                type: 'POST',
+                async: false,
+                data: formData,
+                processData: false, // 使数据不做处理
+                contentType: false, // 不要设置Content-Type请求头
+                success: r => {
+                    if (r.code === 200) {
+                        $('.typing').val(`[FILE]:${r.data.id}:${r.data.name}:${r.data.size}`);
+                        sendMsg();
+                    }
+                }
+            });
+        });
+    };
+
+    // 注册
+    const register = name => {
+        $.post('/im/register', {name: name, avatar: `${Math.round(Math.random() * 9)}.jpg`, gender: 1}, res => {
+            console.log(`${name} 注册成功!`);
+            if (res.code === 200) {
+                chatContext.curUser = res.data;
+                $(".current-user").html(chatContext.curUser.name);
+                $(".current-user-avatar").attr('src', `images/${chatContext.curUser.avatar}`);
+                createWebsocket();
+            }
+        });
+    };
+
+    const createWebsocket = () => {
+        if (!window.WebSocket) {
+            window.WebSocket = window.MozWebSocket;
+        }
+        chatContext.socket = new WebSocket(`ws://localhost:8080/im/${chatContext.curUser.id}`);
+        chatContext.socket.onmessage = event => {
+            const imMessage = JSON.parse(event.data);
+            switch (imMessage.type) {
+                case "TYPE_SYSTEM":
+                    switch (imMessage.msgType) {
+                        case "MSG_TYPE_JOIN":
+                            if (chatContext.curSession.id == imMessage.toId) {
+                                chatContext.ui.info(`${imMessage.fromName} 加入了`);
+                                getGroupUsers(imMessage.toId);
+                            }
+                            break;
+                        case "MSG_TYPE_LEAVE":
+                            if (chatContext.curSession.id == imMessage.toId) {
+                                chatContext.ui.info(`${imMessage.fromName} 离开了`);
+                                getGroupUsers(imMessage.toId);
+                            }
+                            break;
+                    }
+                    break;
+                case "TYPE_GROUP":
+                    if (imMessage.fromId === chatContext.curUser.id) {
+                        chatContext.ui.self(imMessage);
+                    } else {
+                        chatContext.ui.other(imMessage);
+                    }
+                    break;
+                case "TYPE_ONE":
+                    if (imMessage.fromId === chatContext.curUser.id) {
+                        chatContext.ui.self(imMessage);
+                    } else {
+                        chatContext.ui.other(imMessage);
+                    }
+                    break;
+            }
+        };
+        chatContext.socket.onopen = event => {
+            console.log(`${chatContext.curUser.name} 上线了`);
+            getPublicGroup();
+        };
+        chatContext.socket.onclose = event => {
+        };
+        chatContext.socket.onerror = event => {
+            console.log('连接服务器失败!');
+        };
+    };
+
+    window.onload = () => {
+        init();
+        layer.prompt({
+            formType: 0,
+            value: '',
+            title: '请输入个名字吧~',
+        }, function (value, index, elem) {
+            if (value === '') {
+                layer.msg('请输入个名字吧~');
+            } else {
+                layer.close(index);
+                register(value.replace(/\s+/g, ""));
+            }
+        });
+        $('.typing').bind('keydown', event => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMsg();
+            }
+        })
+    };
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], () => {
+    });
+</script>
+</body>
+</html>
