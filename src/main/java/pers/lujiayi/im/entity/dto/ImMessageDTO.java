@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
  */
 @Data
 public class ImMessageDTO {
+    private String id;
     private String fromId;
     private String fromName;
     private String fromAvatar;

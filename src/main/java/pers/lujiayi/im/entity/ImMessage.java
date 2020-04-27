@@ -12,6 +12,7 @@ public class ImMessage {
     public static final String TYPE_SYSTEM = "TYPE_SYSTEM";
     public static final String MSG_TYPE_JOIN = "MSG_TYPE_JOIN";
     public static final String MSG_TYPE_LEAVE = "MSG_TYPE_LEAVE";
+    public static final String MSG_TYPE_FORCE_LEAVE = "MSG_TYPE_FORCE_LEAVE";
 
     private String id;
     private String fromId;

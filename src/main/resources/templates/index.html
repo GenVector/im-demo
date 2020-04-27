@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>im</title>
+    <title>seven-im, 一个菜到不行的即时通讯</title>
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
     <link href="https://www.layuicdn.com/layui/css/layui.css" rel="stylesheet">
     <link href="/css/index.css" rel="stylesheet">
@@ -13,6 +13,7 @@
     <script src="https://www.layuicdn.com/layui/layui.js"></script>
 </head>
 <body>
+<div class="project">seven-im, 一个菜到不行的即时通讯</div>
 <div class="im-container">
     <div class="mask"></div>
     <div class="session-list-container"></div>
@@ -128,7 +129,7 @@
 
     const chatContext = {
         curUser: {id: '', name: '', avatar: ''},
-        curSession: {id: '', name: '', avatar: '', type: '', chatLog: ''},
+        curSession: {id: '', name: '', avatar: '', type: '', chatLog: '', unread: []},
         contacts: {},
         sessions: [],
         socket: null,
@@ -207,7 +208,6 @@
                     content: ''
                 };
                 chatContext.socket.send(JSON.stringify(msg));
-
                 getContacts();
             }
         });
@@ -217,8 +217,8 @@
         $.get(`/im/getContacts/${chatContext.curUser.id}`, res => {
             if (res.code === 200) {
                 chatContext.contacts = res.data;
-                chatContext.contacts.groups.forEach(v => generateSesssionItem(v, v.type));
-                chatContext.contacts.friends.forEach(v => generateSesssionItem(v, 'user'));
+                chatContext.contacts.groups.forEach(v => generateSessionItem(v, v.type));
+                chatContext.contacts.friends.forEach(v => generateSessionItem(v, 'user'));
                 $(`#${chatContext.contacts.groups[0].id}`).trigger('click');
             }
         });
@@ -232,29 +232,24 @@
         });
     };
 
-    const getGroups = () => {
-        $.get(`/im/getGroups/${chatContext.curUser.id}`, res => {
-            if (res.code === 200) {
-                chatContext.groups = res.data;
-                chatContext.groups.forEach(v => generateSesssionItem(v, 'group'));
-                // getGroupUsers(chatContext.groups[0]);
-                $(`#${chatContext.groups[0].id}`).trigger('click');
-            }
-        });
-    };
-
-    const generateSesssionItem = (item, type) => {
+    const generateSessionItem = (item, type) => {
         const h = `
             <div id="${item.id}" class="session-item ${type == 'user' ? item.status == 1 ? '' : 'gray' : ''}" onclick="chat('${item.id}')">
-                <div class="session-avatar">
-                    <img src="images/${item.avatar}">
+                <div style="display: flex;justify-content: space-between;align-items: center;">
+                    <div style="display: flex;align-items: center;">
+                        <div class="session-avatar">
+                            <img src="images/${item.avatar}">
+                        </div>
+                        <div style="margin-left: 10px;">${item.name}</div>
+                    </div>
+                    <div class="unread"></div>
                 </div>
-                <div style="margin-left: 10px;">${item.name}</div>
             </div>
         `;
         $('.session-list-container').append(h);
         item.type = type;
         item.chatLog = '';
+        item.unread = [];
         chatContext.sessions.push(item);
     };
 
@@ -264,6 +259,9 @@
         }
         chatContext.curSession = _.find(chatContext.sessions, {'id': id});
         $('.information').html(chatContext.curSession.chatLog);
+        chatContext.curSession.unread.forEach(v => chatContext.ui.other(v));
+        chatContext.curSession.unread = [];
+        $(`#${chatContext.curSession.id} .unread`).css('display', 'none');
         $('.information').scrollTop($('.information')[0].scrollHeight);
 
         if (chatContext.curSession.type === 'group' || chatContext.curSession.type === 'public') {
@@ -317,7 +315,7 @@
         const session = _.find(chatContext.sessions, {'id': userId});
         if (!session) {
             const user = _.find(chatContext.curSession.users, {'id': userId});
-            generateSesssionItem(user, 'user');
+            generateSessionItem(user, 'user');
         }
         $(`#${userId}`).trigger('click');
     }
@@ -428,26 +426,52 @@
                                 getGroupUsers(imMessage.toId);
                             }
                             break;
+                        case "MSG_TYPE_FORCE_LEAVE":
+                            layer.msg('您的账号在其他设备登录了,被迫下线了...');
+                            break;
                     }
                     break;
                 case "TYPE_GROUP":
-                    if (imMessage.fromId === chatContext.curUser.id) {
-                        chatContext.ui.self(imMessage);
-                    } else {
-                        chatContext.ui.other(imMessage);
+                    if (imMessage.toId === chatContext.curSession.id) { // 收到的消息是当前会话
+                        if (imMessage.fromId === chatContext.curUser.id) {
+                            chatContext.ui.self(imMessage);
+                        } else {
+                            chatContext.ui.other(imMessage);
+                        }
+                    } else { // 收到的消息不是当前会话
+                        const session = _.find(chatContext.sessions, {'id': imMessage.toId});
+                        session.unread.push(imMessage);
+                        $(`#${imMessage.toId} .unread`).html(session.unread.length).css('display', 'block');
                     }
                     break;
                 case "TYPE_ONE":
-                    if (imMessage.fromId === chatContext.curUser.id) {
+                    if (imMessage.fromId === chatContext.curUser.id) { // 自己发送的消息
                         chatContext.ui.self(imMessage);
-                    } else {
-                        chatContext.ui.other(imMessage);
+                    } else { // 收到的消息
+                        if (imMessage.fromId === chatContext.curSession.id) { // 发送者已在会话列表
+                            chatContext.ui.other(imMessage);
+                        } else { // 发送者未在会话列表,则创建新的列表
+                            let session = _.find(chatContext.sessions, {'id': imMessage.fromId});
+                            if (!session) {
+                                session = {
+                                    id: imMessage.fromId,
+                                    name: imMessage.fromName,
+                                    avatar: imMessage.fromAvatar,
+                                    type: 'user',
+                                    status: 1,
+                                    chatLog: '',
+                                    unread: []
+                                };
+                                generateSessionItem(session, 'user');
+                            }
+                            session.unread.push(imMessage);
+                            $(`#${imMessage.fromId} .unread`).html(session.unread.length).css('display', 'block');
+                        }
                     }
                     break;
             }
         };
         chatContext.socket.onopen = event => {
-            console.log(`${chatContext.curUser.name} 上线了`);
             getPublicGroup();
         };
         chatContext.socket.onclose = event => {

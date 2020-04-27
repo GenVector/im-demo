@@ -9,10 +9,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import pers.lujiayi.im.entity.ImGroupUser;
 import pers.lujiayi.im.entity.ImMessage;
+import pers.lujiayi.im.entity.ImOfflineMessage;
 import pers.lujiayi.im.entity.ImUser;
 import pers.lujiayi.im.entity.dto.ImMessageDTO;
 import pers.lujiayi.im.mapper.ImGroupUserMapper;
 import pers.lujiayi.im.mapper.ImMessageMapper;
+import pers.lujiayi.im.mapper.ImOfflineMessageMapper;
 import pers.lujiayi.im.mapper.ImUserMapper;
 
 import javax.websocket.OnClose;
@@ -24,6 +26,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @ServerEndpoint("/im/{id}")
@@ -44,17 +47,35 @@ public class WebSocketServer {
 
     private static ImUserMapper imUserMapper;
 
+    private static ImOfflineMessageMapper imOfflineMessageMapper;
+
     public static void setApplicationContext(ConfigurableApplicationContext applicationContext) {
         WebSocketServer.imGroupUserMapper = applicationContext.getBean(ImGroupUserMapper.class);
         WebSocketServer.imMessageMapper = applicationContext.getBean(ImMessageMapper.class);
         WebSocketServer.imUserMapper = applicationContext.getBean(ImUserMapper.class);
+        WebSocketServer.imOfflineMessageMapper = applicationContext.getBean(ImOfflineMessageMapper.class);
     }
 
     @OnOpen
     public void onOpen(Session session, @PathParam("id") String id) {
         this.userId = id;
         this.session = session;
-        WEBSOCKET_MAP.put(this.userId, this);
+        WebSocketServer webSocketServer = WEBSOCKET_MAP.get(this.userId);
+        if (webSocketServer == null) {
+            WEBSOCKET_MAP.put(this.userId, this);
+        } else {
+            ImMessageDTO imMessageDTO = new ImMessageDTO();
+            imMessageDTO.setMsgType(ImMessage.TYPE_SYSTEM);
+            imMessageDTO.setContent(ImMessage.MSG_TYPE_FORCE_LEAVE);
+            imMessageDTO.setToId(this.userId);
+            imMessageDTO.setSendTime(LocalDateTime.now());
+            Future<Void> future = WebSocketServer.send2One(this.userId, imMessageDTO);
+            if (future != null) {
+                if (future.isDone()) {
+                    WEBSOCKET_MAP.put(this.userId, this);
+                }
+            }
+        }
         ImUser imUser = new ImUser();
         imUser.setId(id);
         imUser.setStatus(ImUser.ONLINE);
@@ -66,9 +87,9 @@ public class WebSocketServer {
         ImMessageDTO imMessageDTO = JSON.parseObject(message, ImMessageDTO.class);
         imMessageDTO.setSendTime(LocalDateTime.now());
         ImMessage imMessage = new ImMessage();
-        BeanUtils.copyProperties(imMessageDTO, imMessage);
         imMessage.setId(IdUtil.simpleUUID());
         imMessageMapper.insert(imMessage);
+        BeanUtils.copyProperties(imMessageDTO, imMessage);
         if (imMessageDTO.getType().equals(ImMessage.TYPE_SYSTEM)) {
             if (imMessageDTO.getMsgType().equals(ImMessage.MSG_TYPE_JOIN)) {
 //                ImGroupUser imGroupUser = new ImGroupUser();
@@ -117,18 +138,23 @@ public class WebSocketServer {
         return this.imGroupUserMapper.selectList(new LambdaQueryWrapper<ImGroupUser>().eq(ImGroupUser::getGroupId, groupId)).stream().map(ImGroupUser::getUserId).collect(Collectors.toList());
     }
 
-    public static void send2Group(List<String> userIds, ImMessageDTO imMessage) {
+    public static void send2Group(List<String> userIds, ImMessageDTO imMessageDTO) {
         for (String userId : userIds) {
-            WebSocketServer.send2One(userId, imMessage);
+            WebSocketServer.send2One(userId, imMessageDTO);
         }
     }
 
-    public static void send2One(String userId, ImMessageDTO imMessage) {
+    public static Future<Void> send2One(String userId, ImMessageDTO imMessageDTO) {
         WebSocketServer webSocketServer = WEBSOCKET_MAP.get(userId);
         if (webSocketServer == null) {
             //TODO 存放离线信息
+            ImOfflineMessage imOfflineMessage = new ImOfflineMessage();
+            imOfflineMessage.setUserId(userId);
+            imOfflineMessage.setMessageId(imMessageDTO.getId());
+            imOfflineMessageMapper.insert(imOfflineMessage);
         } else {
-            webSocketServer.session.getAsyncRemote().sendText(JSON.toJSONString(imMessage));
+            return webSocketServer.session.getAsyncRemote().sendText(JSON.toJSONString(imMessageDTO));
         }
+        return null;
     }
 }

@@ -3,12 +3,19 @@
     margin: 0px;
     box-sizing: border-box;
 }
+.project{
+    width: 1000px;
+    margin: 60px auto 0px auto;
+    font-size: 24px;
+    font-weight: lighter;
+
+}
 
 .im-container {
     width: 1000px;
     height: 600px;
     border: 1px solid #f0f0f0;
-    margin: 60px auto 0px auto;
+    margin: 14px auto;
     box-sizing: content-box;
     box-shadow: 0px 0px 10px #aaa;
     position: relative;
@@ -34,9 +41,9 @@
 }
 
 .session-item {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
+    /*display: flex;*/
+    /*flex-flow: row nowrap;*/
+    /*align-items: center;*/
     margin: 0px 0px 4px;
     padding: 8px;
     background: #f9f9f9;
@@ -61,6 +68,15 @@
 .session-item .session-avatar img {
     width: 48px;
     height: 48px;
+}
+
+.session-item .unread {
+    display: none;
+    padding: 3px;
+    background: red;
+    color: white;
+    border-radius: 100%;
+    font-size: 10px;
 }
 
 .session-container {
@@ -145,7 +161,8 @@
     display: none;
     height: 100%;
 }
-.group-users-list{
+
+.group-users-list {
     height: calc(100% - 32px);
     overflow: auto;
 }
