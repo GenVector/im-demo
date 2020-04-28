@@ -72,10 +72,10 @@
 
 .session-item .unread {
     display: none;
-    padding: 3px;
+    padding: 3px 6px;
     background: red;
     color: white;
-    border-radius: 100%;
+    border-radius: 10px;
     font-size: 10px;
 }
 

@@ -197,7 +197,6 @@
     const joinGroup = group => {
         $.post('/im/joinGroup', {groupId: group.id, userId: chatContext.curUser.id}, res => {
             if (res.code === 200) {
-                console.log(`${chatContext.curUser.name} 加入 ${group.name}!`);
                 const msg = {
                     fromId: chatContext.curUser.id,
                     fromName: chatContext.curUser.name,
@@ -394,7 +393,6 @@
     // 注册
     const register = name => {
         $.post('/im/register', {name: name, avatar: `${Math.round(Math.random() * 9)}.jpg`, gender: 1}, res => {
-            console.log(`${name} 注册成功!`);
             if (res.code === 200) {
                 chatContext.curUser = res.data;
                 $(".current-user").html(chatContext.curUser.name);
@@ -408,7 +406,7 @@
         if (!window.WebSocket) {
             window.WebSocket = window.MozWebSocket;
         }
-        chatContext.socket = new WebSocket(`ws://localhost:8080/im/${chatContext.curUser.id}`);
+        chatContext.socket = new WebSocket(`ws://${window.location.host}/im/${chatContext.curUser.id}`);
         chatContext.socket.onmessage = event => {
             const imMessage = JSON.parse(event.data);
             switch (imMessage.type) {
@@ -475,9 +473,10 @@
             getPublicGroup();
         };
         chatContext.socket.onclose = event => {
+            console.error('关闭服务器连接!');
         };
         chatContext.socket.onerror = event => {
-            console.log('连接服务器失败!');
+            console.error('连接服务器失败!');
         };
     };
 
