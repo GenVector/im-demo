@@ -70,10 +70,8 @@ public class WebSocketServer {
             imMessageDTO.setToId(this.userId);
             imMessageDTO.setSendTime(LocalDateTime.now());
             Future<Void> future = WebSocketServer.send2One(this.userId, imMessageDTO);
-            if (future != null) {
-                if (future.isDone()) {
-                    WEBSOCKET_MAP.put(this.userId, this);
-                }
+            if (future != null && future.isDone()) {
+                WEBSOCKET_MAP.put(this.userId, this);
             }
         }
         ImUser imUser = new ImUser();
@@ -88,15 +86,10 @@ public class WebSocketServer {
         imMessageDTO.setSendTime(LocalDateTime.now());
         ImMessage imMessage = new ImMessage();
         imMessage.setId(IdUtil.simpleUUID());
-        imMessageMapper.insert(imMessage);
         BeanUtils.copyProperties(imMessageDTO, imMessage);
+        imMessageMapper.insert(imMessage);
         if (imMessageDTO.getType().equals(ImMessage.TYPE_SYSTEM)) {
             if (imMessageDTO.getMsgType().equals(ImMessage.MSG_TYPE_JOIN)) {
-//                ImGroupUser imGroupUser = new ImGroupUser();
-//                imGroupUser.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-//                imGroupUser.setGroupId(imMessage.getToId());
-//                imGroupUser.setUserId(imMessage.getFromId());
-//                imGroupUserMapper.insert(imGroupUser);
                 WebSocketServer.send2Group(this.getUserByGroupId(imMessageDTO.getToId()), imMessageDTO);
             }
         } else if (imMessageDTO.getType().equals(ImMessage.TYPE_GROUP)) {
@@ -149,6 +142,7 @@ public class WebSocketServer {
         if (webSocketServer == null) {
             //TODO 存放离线信息
             ImOfflineMessage imOfflineMessage = new ImOfflineMessage();
+            imOfflineMessage.setId(IdUtil.simpleUUID());
             imOfflineMessage.setUserId(userId);
             imOfflineMessage.setMessageId(imMessageDTO.getId());
             imOfflineMessageMapper.insert(imOfflineMessage);

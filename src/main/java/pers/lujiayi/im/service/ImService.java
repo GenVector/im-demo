@@ -102,11 +102,7 @@ public class ImService {
     }
 
     public Res<List<ImUser>> getGroupUsers(String groupId) {
-        List<ImGroupUser> imGroupUsers = this.imGroupUserMapper.selectList(new LambdaQueryWrapper<ImGroupUser>().eq(ImGroupUser::getGroupId, groupId));
-        if (CollUtil.isNotEmpty(imGroupUsers)) {
-            return Res.ok(this.imUserMapper.selectList(new LambdaQueryWrapper<ImUser>().in(ImUser::getId, imGroupUsers.stream().map(ImGroupUser::getUserId).collect(Collectors.toList())).orderByDesc(ImUser::getStatus, ImUser::getCreateTime)), "获取在线用户成功!");
-        }
-        return Res.ok(new ArrayList<>(), "获取在线用户成功!");
+        return Res.ok(this.imGroupUserMapper.getGroupUsers(groupId), "获取群组用户成功!");
     }
 
 }

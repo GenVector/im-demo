@@ -253,6 +253,9 @@
     };
 
     const chat = id => {
+        if (chatContext.curUser.id === id) {
+            return;
+        }
         if (chatContext.curSession.id !== '') {
             chatContext.curSession.chatLog = $('.information').html();
         }
@@ -326,12 +329,12 @@
     const uploadFile = () => $('#file').trigger('click');
 
     const dealContent = msg => {
-        if (/^(\[FILE\]:)+[A-Za-z0-9]+:[A-Za-z0-9]+.+[A-Za-z0-9]:[0-9]/.test(msg)) {
+        if (/^(\[FILE\]:)+[A-Za-z0-9]+:[\s\S]+.+[A-Za-z0-9]:[0-9]/.test(msg)) {
             const str = msg.split(":");
             return `<a target="_blank" href="im/download/${str[1]}" style="text-decoration: underline;color: white;">${str[2]} - ${(str[3] / 1024 / 1024).toFixed(2)}MB</a>`;
         } else if (/^(\[IMG\]:)+[A-Za-z0-9]/.test(msg)) {
             const str = msg.split(":");
-            return `<img src="im/download/${str[1]}" style="max-width: 80%;cursor: pointer;" onclick="window.open('im/download/${str[1]}')">`;
+            return `<img src="im/download/${str[1]}" style="max-width: 400px;cursor: pointer;" onclick="window.open('im/download/${str[1]}')">`;
         } else {
             return msg;
         }
