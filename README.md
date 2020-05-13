@@ -33,9 +33,11 @@
  - [ ] 前端vue版
 
 #### 技术
-前端：jquery
-后端：springboot、websocket、mybatis-plus
-演示地址： [http://123.206.126.235](http://123.206.126.235/)
-gitee：[https://gitee.com/lujiayi/seven-im](https://gitee.com/lujiayi/seven-im)
+
+- 前端：jquery
+- 后端：springboot、websocket、mybatis-plus
+- 演示地址： [http://123.206.126.235](http://123.206.126.235/)
+- gitee：[https://gitee.com/lujiayi/seven-im](https://gitee.com/lujiayi/seven-im)
+
 
  
