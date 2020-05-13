@@ -85,7 +85,7 @@ public class WebSocketServer {
         ImMessageDTO imMessageDTO = JSON.parseObject(message, ImMessageDTO.class);
         imMessageDTO.setSendTime(LocalDateTime.now());
         ImMessage imMessage = new ImMessage();
-        imMessage.setId(IdUtil.simpleUUID());
+        imMessageDTO.setId(IdUtil.simpleUUID());
         BeanUtils.copyProperties(imMessageDTO, imMessage);
         imMessageMapper.insert(imMessage);
         if (imMessageDTO.getType().equals(ImMessage.TYPE_SYSTEM)) {
